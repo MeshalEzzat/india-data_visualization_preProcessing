@@ -41,41 +41,65 @@ if page == 'Dataset Info':
 elif page == 'Analysis questions':
     st.markdown("<h1 style='text-align: center;'>Welcome to analysis questions</h1>", unsafe_allow_html= True)
 
-    fig1 = px.box(data_frame= df, x= 'airline', y= 'price', title= 'what is the price range per airline?')
+    #fig1
+    avg_price_airline_priceCategory = df.groupby(['airline', 'price_category'], observed= True)['price'].mean().sort_values(ascending= False).reset_index()
+
+    fig1 = px.bar(data_frame= avg_price_airline_priceCategory, x='price_category', y= 'price', facet_col= 'airline' , title= 'What is the average price per airline and price category?')
 
     st.plotly_chart(fig1, use_container_width=True)
 
-    fig2 = px.box(data_frame= df, x= 'price_category', y= 'price', height= 600, title='what is the range of prices per category? ')
+    #fig2
+
+    avg_priec_catgory = df.groupby('price_category', observed= True)['price'].mean().sort_values(ascending= False).reset_index()
+
+    fig2 = px.bar(data_frame= avg_priec_catgory, x='price_category' , y= 'price', title= 'What is the average price per category?')
     st.plotly_chart(fig2, use_container_width= True)
 
+    #fig3
     fig3 = px.pie(data_frame= df, names= 'departure Time', title= 'what is the day time people most travel at?')
 
     st.plotly_chart(fig3, use_container_width= True)
 
+    #fig4
+
     fig4 = px.pie(data_frame= df, names= 'airline', title= 'What is the most airline used?')
     st.plotly_chart(fig4, use_container_width= True)
 
+    #fig5
+
     fig5 = px.histogram(data_frame= df, x= 'month_name', text_auto= True, title= 'What is most month people travel?')
     st.plotly_chart(fig5, use_container_width= True)
+
+    #fig6
 
     fig6 = px.pie(data_frame= df, names= 'destination', title= 'What is the most city people travel to?')
     st.plotly_chart(fig6, use_container_width= True)
 
     day_week_df = df['day_of_week'].value_counts().reset_index()
     day_week_df['day_of_week'] = day_week_df['day_of_week'].astype(str)
+
+    #fig7
     fig7 = px.bar(data_frame= day_week_df, x= 'day_of_week', y= 'count', text_auto= True, title= 'what is the day of week people travel? ')
     st.plotly_chart(fig7, use_container_width= True)
 
+    #fig8
     fig8 = px.pie(data_frame= df, names= 'price_category', title= 'what is the most price category people buying?')
     st.plotly_chart(fig8, use_container_width= True)
 
     avg_price_airline_df = df.groupby('airline')['price'].median().sort_values(ascending= False).reset_index()
+
+    #fig9
     fig9 = px.bar(data_frame= avg_price_airline_df, x= 'airline', y= 'price', text_auto= True, title= 'what is the average price for each airline ?')
     st.plotly_chart(fig9, use_container_width= True)
 
     profit_per_month_df = df.groupby(['airline', 'month_name'])['price'].sum().sort_values(ascending= False).reset_index()
+
+    #fig10
+
     fig10 = px.bar(data_frame= profit_per_month_df, x= 'airline', y= 'price', facet_col= 'month_name', text_auto= True, title= 'what is the profit for each airline per month ? and is it less than the last month ?')
     st.plotly_chart(fig10, use_container_width= True)
+
+    #fig11
 
     profit_day_df = df.groupby(['airline', 'day_of_week'])['price'].median().sort_values(ascending= False).reset_index()
     # change the day name to str
@@ -83,6 +107,7 @@ elif page == 'Analysis questions':
     fig11 = px.bar(data_frame= profit_day_df, x= 'airline', y= 'price', facet_col= 'day_of_week', text_auto= True, title= 'What is the average day profit per airline? ')
     st.plotly_chart(fig11, use_container_width= True)
 
+    #fig12
     profit_per_category_df = df.groupby(['airline', 'price_category'])['price'].sum().sort_values(ascending=False).reset_index()
     fig12 = px.bar(data_frame= profit_per_category_df, x= 'price_category', y= 'price', facet_col= 'airline', title= 'Which price category more profitable per airline?', text_auto= True)
     st.plotly_chart(fig12, use_container_width= True)
